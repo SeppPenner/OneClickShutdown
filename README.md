@@ -8,7 +8,7 @@ The executable was written and tested in .Net 4.8.
 [![GitHub issues](https://img.shields.io/github/issues/SeppPenner/OneClickShutdown.svg)](https://github.com/SeppPenner/OneClickShutdown/issues)
 [![GitHub forks](https://img.shields.io/github/forks/SeppPenner/OneClickShutdown.svg)](https://github.com/SeppPenner/OneClickShutdown/network)
 [![GitHub stars](https://img.shields.io/github/stars/SeppPenner/OneClickShutdown.svg)](https://github.com/SeppPenner/OneClickShutdown/stargazers)
-[![GitHub license](https://img.shields.io/badge/license-AGPL-blue.svg)](https://raw.githubusercontent.com/SeppPenner/OneClickShutdown/master/License.txt)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/SeppPenner/OneClickShutdown/master/License.txt)
 [![Known Vulnerabilities](https://snyk.io/test/github/SeppPenner/OneClickShutdown/badge.svg)](https://snyk.io/test/github/SeppPenner/OneClickShutdown)
 
 
