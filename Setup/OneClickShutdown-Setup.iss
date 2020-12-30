@@ -2,11 +2,10 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "OneClickShutdown"
-#define MyAppVersion "1.0.1.0"
+#define MyAppVersion "1.0.2.0"
 #define MyAppPublisher "Hämmer Electronics"
 #define MyAppURL "www.softwareload24.de.tl"
 #define MyAppExeName "OneClickShutdown.exe"
-#define MyPath "C:\Users\Tim\Documents\Git\C# und VB\OneClickShutdown"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -26,10 +25,10 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={commonpf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-LicenseFile={#MyPath}\OneClickShutdown\bin\Release\License.txt
-OutputDir={#MyPath}\Setup
+LicenseFile=..\src\OneClickShutdown\License.txt
+OutputDir=..\Setup
 OutputBaseFilename=OneClickShutdown-Setup
-SetupIconFile={#MyPath}\OneClickShutdown\bin\Release\Shutdown.ico
+SetupIconFile=..\src\OneClickShutdown\Shutdown.ico
 Compression=lzma
 SolidCompression=yes
 
@@ -42,9 +41,9 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "{#MyPath}\OneClickShutdown\bin\Release\OneClickShutdown.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#MyPath}\OneClickShutdown\bin\Release\License.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#MyPath}\OneClickShutdown\bin\Release\Shutdown.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\src\OneClickShutdown\bin\Release\net5.0-windows\OneClickShutdown.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\src\OneClickShutdown\License.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\src\OneClickShutdown\Shutdown.ico"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
