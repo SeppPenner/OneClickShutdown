@@ -42,8 +42,8 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 
 [Files]
 Source: "..\src\OneClickShutdown\bin\Release\net5.0-windows\OneClickShutdown.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\src\OneClickShutdown\License.txt"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\src\OneClickShutdown\Shutdown.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\src\OneClickShutdown\bin\Release\net5.0-windows\OneClickShutdown.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\src\OneClickShutdown\bin\Release\net5.0-windows\License.txt"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
