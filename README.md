@@ -2,7 +2,6 @@ OneClickShutdown
 ====================================
 
 OneClickShutdown is an executable to shut down Windows immediately.
-The executable was written and tested in .Net 5.0.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/t36altug9dusiaet?svg=true)](https://ci.appveyor.com/project/SeppPenner/oneclickshutdown)
 [![GitHub issues](https://img.shields.io/github/issues/SeppPenner/OneClickShutdown.svg)](https://github.com/SeppPenner/OneClickShutdown/issues)
