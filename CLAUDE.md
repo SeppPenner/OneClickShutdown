@@ -39,9 +39,8 @@ folder.
 
 `OneClickShutdown.exe` shuts down the machine it is started on, without a delay and without a
 confirmation prompt. Never start the built executable, never start the installed program, and never
-let the installer run it through its `[Run]` section (an unattended `/SILENT` install would do
-exactly that). "I ran it to see whether it works" costs the user their session and every unsaved
-file.
+tick the "launch now" box at the end of the installer. "I ran it to see whether it works" costs the
+user their session and every unsaved file.
 
 Verify a change in this order instead:
 
@@ -126,6 +125,16 @@ Do not silently "clean up" these, they are existing behaviour:
   character, the `ä` in `Hämmer Electronics`. Without the BOM the installer says
   `HÃ¤mmer Electronics` on any machine whose code page is not Windows-1252. The file was converted
   to UTF-8 with BOM in 1.0.8, keep it that way and keep CRLF.
+- **The `[Run]` entry of the installer is `unchecked`.** The last wizard page offers to start the
+  program, which for this program means shutting the machine down on the spot. `skipifsilent`
+  already keeps it out of `/SILENT` and `/VERYSILENT` installs, but in an interactive install the
+  checkbox used to be ticked by default, so clicking through the wizard was enough. The `unchecked`
+  flag makes it a deliberate choice. Do not drop that flag.
+- **`Company` is set in the `.csproj`, not in an `AssemblyInfo.cs`.** Without it MSBuild falls back
+  to the assembly name, and the executable claimed `OneClickShutdown` as its company while the
+  installer showed `Hämmer Electronics`. The property carries a real umlaut in a file that has no
+  BOM and no XML declaration, which is fine because UTF-8 is the XML default in that case. Keep the
+  file that way, do not add a BOM to the `.csproj`.
 - **Quick launch icon for Windows 7 and older.** The `quicklaunchicon` task in the `.iss` is limited
   by `OnlyBelowVersion: 0,6.1` and therefore never fires. It is what makes `ISCC.exe` warn about
   `PrivilegesRequired=admin` together with `{userappdata}`. Removing the line would make the compile

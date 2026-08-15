@@ -4,6 +4,7 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>net10.0-windows</TargetFramework>
         <ApplicationIcon>Shutdown.ico</ApplicationIcon>
+        <Company>Hämmer Electronics</Company>
         <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
