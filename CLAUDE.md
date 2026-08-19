@@ -5,7 +5,9 @@
 OneClickShutdown is a console application that shuts Windows down immediately. The whole program is
 one method: it sets the console title, prints two German lines, starts `shutdown /s /t 0` and waits
 for a key press. There is no library, no NuGet package to publish and no test project. The
-deliverable is an Inno Setup installer that is committed into this repository.
+deliverable is an Inno Setup installer that is attached to the GitHub release of the version tag. Up
+to and including 1.0.8 it was committed into this repository instead, which is why the history
+carries one copy per release.
 
 One solution `src/OneClickShutdown.sln` with exactly one project:
 
@@ -28,7 +30,8 @@ Layout inside `src/OneClickShutdown`:
 - `build-setup-files.bat`: deletes every `bin` and `obj` below `src`, publishes self contained for
   `win-x64` into `src/OneClickShutdown/bin/publish` and removes the `*.pdb` files. It does **not**
   compile the installer, that is a separate `ISCC.exe` call.
-- `OneClickShutdown-Setup.exe`: the built installer, tracked in git.
+- `OneClickShutdown-Setup.exe`: the built installer, not tracked, it hangs on the GitHub release of
+  its version tag.
 
 Repository root: `README.md` (the only user documentation, uppercase, unlike the sibling
 repositories that use `Readme.md`), `Changelog.md`, `License.txt` (MIT), `.gitignore` and
@@ -117,9 +120,10 @@ Do not silently "clean up" these, they are existing behaviour:
 - **`Console.Title` shows the GitVersion assembly version.** It reads the executing assembly name
   and version, so an untagged build shows something like `OneClickShutdown 1.0.8.0`. That is the
   four part assembly version, not the informational version.
-- **The installer is tracked although `.gitignore` excludes `*.exe`.** `Setup/OneClickShutdown-Setup.exe`
-  was added with `git add -f` and every new installer needs `git add -f` again. The repository
-  therefore grows by the full installer size with every release.
+- **The installer is not tracked any more.** `Setup/OneClickShutdown-Setup.exe` was added with
+  `git add -f` against the `*.exe` rule up to and including 1.0.8, so the repository grew by the full
+  installer size with every release. It hangs on the GitHub release of its version tag now, do not
+  add it back.
 - **The `.iss` needs its BOM.** Inno Setup 6 reads a script as UTF-8 only if a BOM is present,
   otherwise it falls back to the system code page. The file contains exactly one non-ASCII
   character, the `ä` in `Hämmer Electronics`. Without the BOM the installer says
@@ -135,10 +139,10 @@ Do not silently "clean up" these, they are existing behaviour:
   installer showed `Hämmer Electronics`. The property carries a real umlaut in a file that has no
   BOM and no XML declaration, which is fine because UTF-8 is the XML default in that case. Keep the
   file that way, do not add a BOM to the `.csproj`.
-- **Quick launch icon for Windows 7 and older.** The `quicklaunchicon` task in the `.iss` is limited
-  by `OnlyBelowVersion: 0,6.1` and therefore never fires. It is what makes `ISCC.exe` warn about
-  `PrivilegesRequired=admin` together with `{userappdata}`. Removing the line would make the compile
-  warning free.
+- **The quick launch icon is gone and the compile is warning free.** The `quicklaunchicon` task in the
+  `.iss` was limited by `OnlyBelowVersion: 0,6.1` and never fired, and it was what made `ISCC.exe`
+  warn about `PrivilegesRequired=admin` together with `{userappdata}`. Keep it that way, do not put a
+  per user path back into the script.
 - **AppVeyor badge without CI in the repository.** `README.md` links an AppVeyor build that is
   configured outside of this repository. There is no pipeline file here.
 - **`src/OneClickShutdown.sln.DotSettings`** is tracked and holds nothing but a ReSharper user
@@ -160,8 +164,10 @@ Do not silently "clean up" these, they are existing behaviour:
 6. **Then** build the installer, in this order:
    - `Setup/build-setup-files.bat` (publishes self contained and removes the `*.pdb`).
    - `"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" Setup\OneClickShutdown-Setup.iss`.
-7. `git add -f Setup/OneClickShutdown-Setup.exe`, commit as `Updated setup.`.
-8. Push the commits and the tag.
+7. Push the commits and the tag.
+8. Attach `Setup/OneClickShutdown-Setup.exe` to the GitHub release of that tag. **Never commit the
+   installer.** `Setup/` is the `OutputDir` of the Inno Setup script, so the file lands there during
+   the build and `.gitignore` covers it afterwards.
 
 The tag comes **before** the installer build on purpose. GitVersion takes the assembly version from
 the tag, so building first burns a prerelease version like `1.0.8-1+Branch.master.Sha...` into the
@@ -174,6 +180,22 @@ The version in `Changelog.md` and in the `.iss` has four parts (`1.0.8.0`), the 
 Note on the batch file: if `NoDefaultCurrentDirectoryInExePath` is set in the environment, cmd does
 not search the current directory. Call it as `call .\build-setup-files.bat` after `cd /d` into the
 `Setup` folder, because the `cd ..\src` inside the batch is relative to the start directory.
+
+For step 8 there is no `gh` on this machine. The GitHub API does the job, with the token that
+`git push` already uses, so nothing has to be stored anywhere:
+
+```bash
+c=$(printf "protocol=https\nhost=github.com\n\n" | git credential fill)
+tok=$(printf "%s" "$c" | grep '^password=' | cut -d= -f2-)
+id=$(curl -s -X POST -H "Authorization: Bearer $tok" \
+  https://api.github.com/repos/SeppPenner/OneClickShutdown/releases \
+  -d '{"tag_name":"1.0.9","name":"1.0.9"}' | grep -m1 '"id"' | tr -dc 0-9)
+curl -s -X POST -H "Authorization: Bearer $tok" -H "Content-Type: application/octet-stream" \
+  --data-binary @Setup/OneClickShutdown-Setup.exe \
+  "https://uploads.github.com/repos/SeppPenner/OneClickShutdown/releases/$id/assets?name=OneClickShutdown-Setup.exe"
+```
+
+Never print that token, and never write it into a file.
 
 ## Git
 
